@@ -1,20 +1,41 @@
 - hosts: localhost
   become: true
+  pre_tasks:
+    - name: Update apt cache
+      tags:
+        - zsh
+        - node
+      apt:
+        update_cache: yes
   tasks:
   - name: Install zsh
     apt:
       name: zsh
+    tags: zsh
   - name: Change Shell
     shell: chsh -s `which zsh`
+    tags: zsh
   - name: Install oh-my-zsh
     shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+    tags: zsh
   - name: Install jq
     apt:
       name: jq
+    tags: zsh
   - name: Install Node.js
     apt:
       name: [nodejs, npm]
+    tags: node
   - name: Install NVM
     shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-  # - name: nvm 18
-  #   shell: nvm install 18
+    tags: node
+  - name: Add NVM config to zshrc
+    tags: node
+    blockinfile:
+      dest: ~/.zshrc
+      block: |-
+        export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+  - name: nvm 18
+    tags: node
+    shell: source ~/.nvm/nvm.sh && && nvm install 18
