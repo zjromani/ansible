@@ -1,0 +1,20 @@
+- hosts: localhost
+  become: true
+  tasks:
+  - name: Install zsh
+    apt:
+      name: zsh
+  - name: Change Shell
+    shell: chsh -s `which zsh`
+  - name: Install oh-my-zsh
+    shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+  - name: Install jq
+    apt:
+      name: jq
+  - name: Install Node.js
+    apt:
+      name: [nodejs, npm]
+  - name: Install NVM
+    shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+  # - name: nvm 18
+  #   shell: nvm install 18
