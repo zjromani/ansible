@@ -8,7 +8,7 @@
       apt:
         update_cache: yes
   tasks:
-  - include: tasks/dotfiles.yml
+  - include_tasks: tasks/dotfiles.yml
   - name: Install zsh
     apt:
       name: zsh
