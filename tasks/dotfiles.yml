@@ -28,55 +28,9 @@
   tags:
     - dotfiles
 
-- name: Symlink dotfiles with Stow
+- name: Run install script from .dotfiles
   shell: |
-    stow --adopt -v --dotfiles -t ~/.config/ dot-config
-    stow psqlrc
-    stow gitconfig
-    stow tmux
-    stow zsh
-  args:
-    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
+    cd {{ lookup('env', 'HOME') }}/.dotfiles && ./install
   tags:
     - dotfiles
-
-
-- name: Check if git config directory exists
-  stat:
-    path: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/git"
-  register: git_config_exists
-  tags:
-    - dotfiles
-
-- name: Symlink git configuration in ~/.config if exists
-  file:
-    src: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/git"
-    dest: "{{ lookup('env', 'HOME') }}/.config/git"
-    state: link
-  when: git_config_exists.stat.exists
-  tags:
-    - dotfiles
-
-- name: Check if nvim config directory exists
-  stat:
-    path: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/nvim"
-  register: nvim_config_exists
-  tags:
-    - dotfiles
-
-- name: Symlink Neovim configuration in ~/.config if exists
-  file:
-    src: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/nvim"
-    dest: "{{ lookup('env', 'HOME') }}/.config/nvim"
-    state: link
-  when: nvim_config_exists.stat.exists
-  tags:
-    - dotfiles
-
-- name: Create .zshenv_private for sensitive variables
-  file:
-    path: "{{ lookup('env', 'HOME') }}/.zshenv_private"
-    state: touch
-    mode: '0600'
-  tags:
-    - dotfiles
+    - install

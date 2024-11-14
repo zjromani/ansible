@@ -13,12 +13,20 @@
     - include_tasks: tasks/setup-config-dir.yml
       tags:
         - config
+
     - include_tasks: tasks/ssh.yml
       tags:
         - ssh
+
+    - include_tasks: tasks/apple-brew.yml
+      tags:
+        - apple
+        - install
+
     - include_tasks: tasks/neovim.yml
       tags:
         - nvim
+
     - include_tasks: tasks/dotfiles.yml
       tags:
         - dotfiles
