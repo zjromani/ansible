@@ -1,21 +1,82 @@
-- name: Installing stow
-  apt: name=stow
+- name: Ensure known_hosts file includes GitHub
+  shell: |
+    ssh-keyscan -H github.com >> ~/.ssh/known_hosts
   tags:
-    - install
     - dotfiles
-- name: Cloning .dotfiles
-  ansible.builtin.git:
+
+- name: Cloning .dotfiles using SSH
+  git:
     repo: 'git@github.com:zjromani/.dotfiles.git'
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
-    recursive: yes
-    update: yes
-    accept_hostkey: yes
     version: master
+    accept_hostkey: yes
   tags:
-    - install
     - dotfiles
-      #- name: Stow dotfiles
-      #  shell: cd $HOME/.dotfiles && ./ubuntu
-      #  tags:
-      #    - install
-      #    - dotfiles
+
+- name: Install GNU Stow
+  apt:
+    name: stow
+    state: present
+  tags:
+    - dotfiles
+
+- name: Ensure ~/.config directory exists
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config"
+    state: directory
+    mode: '0755'
+  tags:
+    - dotfiles
+
+- name: Symlink dotfiles with Stow
+  shell: |
+    stow --adopt -v --dotfiles -t ~/.config/ dot-config
+    stow psqlrc
+    stow gitconfig
+    stow tmux
+    stow zsh
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
+  tags:
+    - dotfiles
+
+
+- name: Check if git config directory exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/git"
+  register: git_config_exists
+  tags:
+    - dotfiles
+
+- name: Symlink git configuration in ~/.config if exists
+  file:
+    src: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/git"
+    dest: "{{ lookup('env', 'HOME') }}/.config/git"
+    state: link
+  when: git_config_exists.stat.exists
+  tags:
+    - dotfiles
+
+- name: Check if nvim config directory exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/nvim"
+  register: nvim_config_exists
+  tags:
+    - dotfiles
+
+- name: Symlink Neovim configuration in ~/.config if exists
+  file:
+    src: "{{ lookup('env', 'HOME') }}/.dotfiles/dot-config/nvim"
+    dest: "{{ lookup('env', 'HOME') }}/.config/nvim"
+    state: link
+  when: nvim_config_exists.stat.exists
+  tags:
+    - dotfiles
+
+- name: Create .zshenv_private for sensitive variables
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.zshenv_private"
+    state: touch
+    mode: '0600'
+  tags:
+    - dotfiles

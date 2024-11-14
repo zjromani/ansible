@@ -1,63 +1,42 @@
 - hosts: localhost
   become: true
+  vars:
+    source_key: "/usr/local/bin/.ssh/id_rsa"
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
   pre_tasks:
     - name: Update apt cache
-      tags:
-        - zsh
-        - node
       apt:
         update_cache: yes
+      tags: zsh
+
   tasks:
-  - include_tasks: tasks/dotfiles.yml
-  - name: Install zsh
-    apt:
-      name: zsh
-    tags: zsh
-  - name: Change Shell
-    shell: chsh -s `which zsh`
-    tags: zsh
-  - name: Install oh-my-zsh
-    shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
-    tags: zsh
-  - name: Install jq
-    apt:
-      name: jq
-    tags: zsh
-  - name: Install Node.js
-    apt:
-      name: [nodejs, npm]
-    tags: node
-  - name: Install NVM
-    shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-    tags: node
-  - name: Add NVM config to zshrc
-    tags: node
-    blockinfile:
-      dest: ~/.zshrc
-      block: |-
-        export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+    - include_tasks: tasks/setup-config-dir.yml
+      tags:
+        - config
+    - include_tasks: tasks/ssh.yml
+      tags:
+        - ssh
+    - include_tasks: tasks/neovim.yml
+      tags:
+        - nvim
+    - include_tasks: tasks/dotfiles.yml
+      tags:
+        - dotfiles
 
-        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    - name: Install zsh
+      apt:
+        name: zsh
+      tags: zsh
 
+    - name: Change Shell
+      shell: chsh -s $(which zsh)
+      tags: zsh
 
-        # place this after nvm initialization!
-        autoload -U add-zsh-hook
-        load-nvmrc() {
-          local nvmrc_path="$(nvm_find_nvmrc)"
+    - name: Install oh-my-zsh
+      shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+      tags: zsh
 
-          if [ -n "$nvmrc_path" ]; then
-            local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-            if [ "$nvmrc_node_version" = "N/A" ]; then
-              nvm install
-            elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-              nvm use
-            fi
-          elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-            echo "Reverting to nvm default version"
-            nvm use default
-          fi
-        }
-        add-zsh-hook chpwd load-nvmrc
-        load-nvmrc
+    - name: Install jq
+      apt:
+        name: jq
+      tags: zsh
