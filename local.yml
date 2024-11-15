@@ -30,18 +30,9 @@
       tags:
         - macos
 
-    - name: Install zsh
-      apt:
-        name: zsh
-      tags: zsh
-
-    - name: Change Shell
-      shell: chsh -s $(which zsh)
-      tags: zsh
-
-    - name: Install oh-my-zsh
-      shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
-      tags: zsh
+    - include_tasks: tasks/zsh.yml
+      tags:
+        - zsh
 
     - include_tasks: tasks/dotfiles.yml
       tags:

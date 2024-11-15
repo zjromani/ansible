@@ -8,6 +8,53 @@
   loop:
     - { key: KeyRepeat, value: 2 }
     - { key: InitialKeyRepeat, value: 11 }
-  when: ansible_facts['platform'] == 'Darwin'
+  when: ansible_facts['system'] == 'Darwin'
   tags:
     - macos
+    - keyboard
+
+- name: Check if Homebrew is installed (Intel Macs)
+  stat:
+    path: /usr/local/bin/brew
+  register: homebrew_intel
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - macos
+    - homebrew
+
+- name: Check if Homebrew is installed (Apple Silicon Macs)
+  stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_apple
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - macos
+    - homebrew
+
+- name: Install Homebrew
+  shell: |
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    creates: "{{ homebrew_install_path }}"
+  vars:
+    homebrew_install_path: >
+      {{ '/opt/homebrew/bin/brew' if ansible_facts['processor'][0] == 'arm' else '/usr/local/bin/brew' }}
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - homebrew_intel.stat.exists == false
+    - homebrew_apple.stat.exists == false
+  tags:
+    - macos
+    - homebrew
+
+- name: Ensure Homebrew is in the PATH (Apple Silicon Macs)
+  lineinfile:
+    path: ~/.zprofile
+    line: 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+    create: yes
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - ansible_facts['processor'][0] == 'arm'
+  tags:
+    - macos
+    - homebrew
