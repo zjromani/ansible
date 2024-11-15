@@ -18,9 +18,8 @@
       tags:
         - ssh
 
-    - include_tasks: tasks/apple-brew.yml
+    - include_tasks: tasks/core-tools.yml
       tags:
-        - apple
         - install
 
     - include_tasks: tasks/neovim.yml

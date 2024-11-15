@@ -1,0 +1,54 @@
+- name: Install Core Development Tools
+  apt:
+    name:
+      - git
+      - zsh
+      - ripgrep
+      - tmux
+      - awscli
+      - jq
+    state: present
+  tags:
+    - core
+    - install
+
+- name: Install Browsers
+  apt:
+    name:
+      - firefox
+      - chromium-browser
+    state: present
+  tags:
+    - core
+    - browser
+
+- name: Install Productivity Applications
+  apt:
+    name:
+      - gnome-terminal
+    state: present
+  tags:
+    - core
+    - productivity
+
+- name: Download Slack .deb package
+  get_url:
+    url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.20.0-amd64.deb
+    dest: /tmp/slack-desktop.deb
+  tags:
+    - core
+    - productivity
+
+- name: Install Slack
+  apt:
+    deb: /tmp/slack-desktop.deb
+  tags:
+    - core
+    - productivity
+
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+  tags:
+    - core
