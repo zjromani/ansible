@@ -26,10 +26,6 @@
       tags:
         - nvim
 
-    - include_tasks: tasks/dotfiles.yml
-      tags:
-        - dotfiles
-
     - name: Install zsh
       apt:
         name: zsh
@@ -43,7 +39,6 @@
       shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
       tags: zsh
 
-    - name: Install jq
-      apt:
-        name: jq
-      tags: zsh
+    - include_tasks: tasks/dotfiles.yml
+      tags:
+        - dotfiles
