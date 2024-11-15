@@ -1,3 +1,10 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  tags:
+    - core
+    - install
+
 - name: Install Core Development Tools
   apt:
     name:
@@ -22,33 +29,8 @@
     - core
     - browser
 
-- name: Install Productivity Applications
-  apt:
-    name:
-      - gnome-terminal
-    state: present
+- name: Install missing packages
+  shell: apt-get install -y --fix-missing
   tags:
     - core
-    - productivity
-
-- name: Download Slack .deb package
-  get_url:
-    url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.20.0-amd64.deb
-    dest: /tmp/slack-desktop.deb
-  tags:
-    - core
-    - productivity
-
-- name: Install Slack
-  apt:
-    deb: /tmp/slack-desktop.deb
-  tags:
-    - core
-    - productivity
-
-- name: Install Docker
-  apt:
-    name: docker.io
-    state: present
-  tags:
-    - core
+    - install
