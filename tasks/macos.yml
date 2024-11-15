@@ -1,0 +1,13 @@
+- name: Set macOS keyboard settings
+  connection: local
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+    type: int
+  loop:
+    - { key: KeyRepeat, value: 2 }
+    - { key: InitialKeyRepeat, value: 11 }
+  when: ansible_facts['platform'] == 'Darwin'
+  tags:
+    - macos

@@ -26,6 +26,10 @@
       tags:
         - nvim
 
+    - include_tasks: tasks/macos.yml
+      tags:
+        - macos
+
     - name: Install zsh
       apt:
         name: zsh
