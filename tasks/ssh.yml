@@ -4,8 +4,8 @@
     mode: '0700'
     state: directory
   tags:
-    - dotfiles
     - ssh
+  become: false
 
 - name: Install SSH private key
   copy:
@@ -13,8 +13,8 @@
     dest: "{{ dest_key }}"
     mode: '0600'
   tags:
-    - dotfiles
     - ssh
+  become: false
 
 - name: Install SSH public key
   copy:
@@ -22,14 +22,22 @@
     dest: "{{ dest_key }}.pub"
     mode: '0644'
   tags:
-    - dotfiles
     - ssh
+  become: false
 
+- name: Add SSH private key to the agent
+  shell: |
+    eval "$(ssh-agent -s)"
+    ssh-add "{{ dest_key }}"
+  tags:
+    - ssh
+  become: false
 
 - name: Set authorized key from file
   authorized_key:
-    user: "root"
+    user: "{{ user_name }}"
     state: present
-    key: "{{ lookup('file', dest_key + '.pub') }}"
+    key: "{{ lookup('file', source_key + '.pub') }}"
   tags:
     - ssh
+  become: false

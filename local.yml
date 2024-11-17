@@ -1,13 +1,23 @@
 - hosts: localhost
-  become: true
   vars:
-    source_key: "/usr/local/bin/.ssh/id_rsa"
-    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+    user_home: "{{ lookup('env', 'HOME') }}"
+    user_name: "{{ lookup('env', 'USER') }}"
+    source_key: "{{ ansible_env.PWD }}/.ssh/id_rsa"
+    dest_key: "{{ user_home }}/.ssh/id_rsa"
   pre_tasks:
     - name: Update apt cache
+      become: true
       apt:
         update_cache: yes
       tags: zsh
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Update Homebrew
+      homebrew:
+        update_homebrew: yes
+      tags: brew
+      become: false
+      when: ansible_facts['os_family'] == 'Darwin'
 
   tasks:
     - include_tasks: tasks/setup-config-dir.yml

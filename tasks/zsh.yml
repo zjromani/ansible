@@ -1,10 +1,20 @@
-- name: Install Zsh
+- name: Install Zsh (Linux)
   become: true
   apt:
     name: zsh
     state: present
   tags:
     - zsh
+  when: ansible_facts['system'] != 'Darwin'
+
+- name: Install Zsh (macOS)
+  become: false
+  homebrew:
+    name: zsh
+    state: present
+  tags:
+    - zsh
+  when: ansible_facts['system'] == 'Darwin'
 
 - name: Change shell to zsh
   become: true

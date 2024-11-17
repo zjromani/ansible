@@ -1,5 +1,11 @@
 # Ansible
 
+## Pre Reqs
+
+- Ansible
+- Git
+- Homebrew
+
 ## Setup
 
 This is my setup for Ansible for new machine setup.
@@ -8,13 +14,12 @@ This is my setup for Ansible for new machine setup.
 
 ```sh
 git clone https://github.com/zjromani/ansible
-sudo apt update
-sudo apt install ansible -y
 ```
 Then run
 
 ```sh
-ansible-playbook local.yml --ask-vault-pass
+// ask-become-pass is for sudo password
+ansible-playbook local.yml --ask-vault-pass --ask-become-pass
 ```
 
 This will setup a new machine by pulling .dotfiles, stowing them, and auto installing some other core packages/tools.

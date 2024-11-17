@@ -4,19 +4,30 @@
   tags:
     - dotfiles
 
+- name: Install GNU Stow on Linux
+  apt:
+    name: stow
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'
+  become: true
+  tags:
+    - dotfiles
+
+- name: Install GNU Stow on macOS
+  homebrew:
+    name: stow
+    state: present
+  when: ansible_facts['system'] == 'Darwin'
+  become: false
+  tags:
+    - dotfiles
+
 - name: Cloning .dotfiles using SSH
   git:
     repo: 'git@github.com:zjromani/.dotfiles.git'
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
     version: master
     accept_hostkey: yes
-  tags:
-    - dotfiles
-
-- name: Install GNU Stow
-  apt:
-    name: stow
-    state: present
   tags:
     - dotfiles
 

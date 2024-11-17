@@ -4,8 +4,19 @@
   tags:
     - core
     - install
+  become: true
+  when: ansible_facts['system'] != 'Darwin'
 
-- name: Install Core Development Tools
+- name: Update Homebrew
+  homebrew:
+    update_homebrew: yes
+  tags:
+    - core
+    - install
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+
+- name: Install Core Development Tools (Linux)
   apt:
     name:
       - git
@@ -18,8 +29,89 @@
   tags:
     - core
     - install
+  become: true
+  when: ansible_facts['system'] != 'Darwin'
 
-- name: Install Browsers
+- name: Install Core Development Tools (macOS)
+  homebrew:
+    name:
+      - git
+      - zsh
+      - ripgrep
+      - tmux
+      - awscli
+      - jq
+    state: present
+  tags:
+    - core
+    - install
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+
+- name: Check if Firefox is installed (macOS)
+  stat:
+    path: /Applications/Firefox.app
+  register: firefox_installed
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - core
+    - browser
+
+- name: Install Firefox (macOS)
+  homebrew_cask:
+    name: firefox
+    state: present
+  become: false
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - not firefox_installed.stat.exists
+  tags:
+    - core
+    - browser
+
+- name: Check if Chromium is installed (macOS)
+  stat:
+    path: /Applications/Chromium.app
+  register: chromium_installed
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - core
+    - browser
+
+- name: Install Chromium (macOS)
+  homebrew_cask:
+    name: chromium
+    state: present
+  become: false
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - not chromium_installed.stat.exists
+  tags:
+    - core
+    - browser
+
+- name: Check if Brave Browser is installed (macOS)
+  stat:
+    path: "/Applications/Brave Browser.app"
+  register: brave_installed
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - core
+    - browser
+
+- name: Install Brave Browser (macOS)
+  homebrew_cask:
+    name: brave-browser
+    state: present
+  become: false
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - not brave_installed.stat.exists
+  tags:
+    - core
+    - browser
+
+- name: Install Browsers (Linux)
   apt:
     name:
       - firefox
@@ -28,9 +120,13 @@
   tags:
     - core
     - browser
+  become: true
+  when: ansible_facts['system'] != 'Darwin'
 
-- name: Install missing packages
+- name: Install missing packages (Linux)
   shell: apt-get install -y --fix-missing
   tags:
     - core
     - install
+  become: true
+  when: ansible_facts['system'] != 'Darwin'

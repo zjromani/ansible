@@ -1,12 +1,22 @@
-- name: Remove old Neovim package if installed
+- name: Remove old Neovim package if installed (Linux)
   become: true
   ansible.builtin.apt:
     name: neovim
     state: absent
   tags:
     - nvim
+  when: ansible_facts['system'] != 'Darwin'
 
-- name: Add Neovim PPA
+- name: Remove old Neovim package if installed (macOS)
+  become: false
+  ansible.builtin.homebrew:
+    name: neovim
+    state: absent
+  tags:
+    - nvim
+  when: ansible_facts['system'] == 'Darwin'
+
+- name: Add Neovim PPA (Linux)
   become: true
   ansible.builtin.apt_repository:
     repo: ppa:neovim-ppa/stable
@@ -14,8 +24,9 @@
     update_cache: yes
   tags:
     - nvim
+  when: ansible_facts['system'] != 'Darwin'
 
-- name: Install Neovim (v0.5+)
+- name: Install Neovim (v0.5+) (Linux)
   become: true
   ansible.builtin.apt:
     name: neovim
@@ -23,25 +34,13 @@
     update_cache: yes
   tags:
     - nvim
+  when: ansible_facts['system'] != 'Darwin'
 
-- name: Ensure Packer directory exists
-  ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start"
-    state: directory
-    mode: '0755'
+- name: Install Neovim (v0.5+) (macOS)
+  become: false
+  ansible.builtin.homebrew:
+    name: neovim
+    state: present
   tags:
     - nvim
-
-- name: Get Packer
-  ansible.builtin.git:
-    repo: 'https://github.com/wbthomason/packer.nvim'
-    dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
-    version: master
-  tags:
-    - nvim
-
-- name: Run PackerSync
-  ansible.builtin.shell: |
-    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-  tags:
-    - nvim
+  when: ansible_facts['system'] == 'Darwin'
