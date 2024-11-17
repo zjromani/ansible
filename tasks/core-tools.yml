@@ -25,6 +25,7 @@
       - tmux
       - awscli
       - jq
+      - fzf
     state: present
   tags:
     - core
@@ -40,6 +41,7 @@
       - ripgrep
       - tmux
       - awscli
+      - fzf
       - jq
     state: present
   tags:
@@ -122,6 +124,34 @@
     - browser
   become: true
   when: ansible_facts['system'] != 'Darwin'
+
+- name: Install Notion (macOS)
+  homebrew_cask:
+    name: notion
+    state: present
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - productivity
+
+- name: Alfred
+  homebrew_cask:
+    name: alfred
+    state: present
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - install
+    - productivity
+
+- name: Install iTerm2 (macOS)
+  homebrew_cask:
+    name: iterm2
+    state: present
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - terminal
 
 - name: Install missing packages (Linux)
   shell: apt-get install -y --fix-missing
