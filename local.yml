@@ -48,6 +48,10 @@
       tags:
         - node
 
+    - include_tasks: tasks/java.yml
+      tags:
+        - java
+
     - include_tasks: tasks/dotfiles.yml
       tags:
         - dotfiles

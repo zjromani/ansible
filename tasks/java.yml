@@ -1,1 +1,25 @@
-# brew install openjdk
+- name: Install Java (macOS)
+  homebrew:
+    name: openjdk
+    state: present
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - java
+
+- name: Install Java (Linux)
+  apt:
+    name: default-jdk
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'
+  become: true
+  tags:
+    - java
+
+- name: Add Java to shell profile (macOS)
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: 'export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"'
+    insertafter: EOF
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - java
