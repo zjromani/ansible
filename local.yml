@@ -44,6 +44,10 @@
       tags:
         - zsh
 
+    - include_tasks: tasks/node.yml
+      tags:
+        - node
+
     - include_tasks: tasks/dotfiles.yml
       tags:
         - dotfiles
