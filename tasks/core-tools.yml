@@ -125,12 +125,22 @@
   become: true
   when: ansible_facts['system'] != 'Darwin'
 
+- name: Check if Notion is installed (macOS)
+  stat:
+    path: /Applications/Notion.app
+  register: notion_installed
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - productivity
+
 - name: Install Notion (macOS)
   homebrew_cask:
     name: notion
     state: present
   become: false
-  when: ansible_facts['system'] == 'Darwin'
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - not notion_installed.stat.exists
   tags:
     - productivity
 

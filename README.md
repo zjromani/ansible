@@ -10,7 +10,7 @@
 
 This is my setup for Ansible for new machine setup.
 
- Ansible is not already installed, you can install it using the following command:
+Ansible is not already installed, you can install it using the following command:
 
 ```sh
 git clone https://github.com/zjromani/ansible
