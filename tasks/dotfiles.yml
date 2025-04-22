@@ -1,6 +1,5 @@
 - name: Ensure known_hosts file includes GitHub
-  shell: |
-    ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+  shell: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
   tags:
     - dotfiles
 
@@ -22,7 +21,7 @@
   tags:
     - dotfiles
 
-- name: Cloning .dotfiles using SSH
+- name: Clone .dotfiles using SSH
   git:
     repo: 'git@github.com:zjromani/.dotfiles.git'
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
@@ -39,9 +38,38 @@
   tags:
     - dotfiles
 
-- name: Run install script from .dotfiles
+- name: Fix permissions for ~/.config
+  become: true
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config"
+    recurse: true
+    owner: "{{ lookup('env', 'USER') }}"
+    group: staff
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - dotfiles
+
+- name: Backup existing .zshrc if it exists and is not a symlink
   shell: |
-    cd {{ lookup('env', 'HOME') }}/.dotfiles && ./install
+    if [ -f ~/.zshrc ] && [ ! -L ~/.zshrc ]; then
+      mv ~/.zshrc ~/.zshrc.backup
+    fi
+  args:
+    executable: /bin/zsh
+  tags:
+    - dotfiles
+
+- name: Run install script from .dotfiles
+  shell: ./install
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
+    executable: /bin/zsh
   tags:
     - dotfiles
     - install
+
+- name: Notify user to restart shell
+  debug:
+    msg: "Dotfiles installed. Please run 'exec $SHELL' or restart your terminal session."
+  tags:
+    - dotfiles
