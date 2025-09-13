@@ -43,6 +43,7 @@
       - awscli
       - fzf
       - jq
+      - cleanshot
     state: present
   tags:
     - core

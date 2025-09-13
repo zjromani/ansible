@@ -12,3 +12,23 @@
   tags:
     - macos
     - keyboard
+
+- name: Disable press-and-hold for keys in favor of key repeat
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: ApplePressAndHoldEnabled
+    type: bool
+    value: false
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - macos
+    - keyboard
+
+- name: Set macOS to use ISO 8601 date format via en_DK locale
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleLocale
+    value: "en_DK"
+  tags:
+    - macos
+    - locale
