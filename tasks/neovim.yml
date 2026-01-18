@@ -36,11 +36,11 @@
     - nvim
   when: ansible_facts['system'] != 'Darwin'
 
-- name: Install Neovim (v0.5+) (macOS)
+- name: Install Neovim (v0.11+) (macOS)
   become: false
   ansible.builtin.homebrew:
     name: neovim
-    state: present
+    state: latest
   tags:
     - nvim
   when: ansible_facts['system'] == 'Darwin'
