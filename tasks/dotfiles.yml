@@ -26,6 +26,7 @@
     repo: 'git@github.com:zjromani/.dotfiles.git'
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
     version: master
+    update: yes
     accept_hostkey: yes
   tags:
     - dotfiles
