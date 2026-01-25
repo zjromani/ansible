@@ -11,3 +11,7 @@
     - name: Update tmux plugins
       include_tasks: tasks/tmux-plugins.yml
       tags: tmux
+
+    - name: Sync iTerm2 configuration
+      include_tasks: tasks/iterm2.yml
+      tags: iterm2
