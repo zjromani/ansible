@@ -69,6 +69,12 @@
     - dotfiles
     - install
 
+- name: Install tmux plugins
+  include_tasks: tmux-plugins.yml
+  tags:
+    - dotfiles
+    - tmux-plugins
+
 - name: Notify user to restart shell
   debug:
     msg: "Dotfiles installed. Please run 'exec $SHELL' or restart your terminal session."

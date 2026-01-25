@@ -55,3 +55,11 @@
     - include_tasks: tasks/dotfiles.yml
       tags:
         - dotfiles
+
+    - include_tasks: tasks/tmux-plugins.yml
+      tags:
+        - tmux-plugins
+
+    - include_tasks: tasks/dotfiles-update.yml
+      tags:
+        - dotfiles-update

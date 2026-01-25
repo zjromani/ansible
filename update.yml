@@ -1,0 +1,13 @@
+# Quick update playbook for existing machines
+- hosts: localhost
+  vars:
+    user_home: "{{ lookup('env', 'HOME') }}"
+
+  tasks:
+    - name: Pull latest dotfiles
+      include_tasks: tasks/dotfiles-update.yml
+      tags: dotfiles
+
+    - name: Update tmux plugins
+      include_tasks: tasks/tmux-plugins.yml
+      tags: tmux

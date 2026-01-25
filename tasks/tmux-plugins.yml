@@ -1,0 +1,19 @@
+# Install tmux plugins required by .tmux.conf
+- name: Ensure tmux plugins directory exists
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config/tmux/plugins"
+    state: directory
+    mode: '0755'
+  tags:
+    - tmux
+    - plugins
+
+- name: Install tmux catppuccin theme
+  git:
+    repo: 'https://github.com/catppuccin/tmux.git'
+    dest: "{{ lookup('env', 'HOME') }}/.config/tmux/plugins/catppuccin"
+    version: main
+    update: yes
+  tags:
+    - tmux
+    - plugins

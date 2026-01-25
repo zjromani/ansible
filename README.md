@@ -24,6 +24,29 @@ ansible-playbook local.yml --ask-vault-pass --ask-become-pass
 
 This will setup a new machine by pulling .dotfiles, stowing them, and auto installing some other core packages/tools.
 
+## Updating Existing Machines
+
+For machines with dotfiles already installed, use the update playbook:
+
+```sh
+# Quick update - pulls latest dotfiles and re-stows
+ansible-playbook update.yml
+
+# Update specific components
+ansible-playbook update.yml --tags dotfiles
+ansible-playbook update.yml --tags tmux
+```
+
+This will:
+- Pull latest .dotfiles from GitHub
+- Re-stow all packages
+- Update tmux plugins (catppuccin)
+
+### Full Setup vs Update
+
+- **New machine**: `ansible-playbook local.yml --ask-vault-pass --ask-become-pass`
+- **Existing machine**: `ansible-playbook update.yml`
+
 ## SSH
 
 A note on SSH -- I'm using Ansible Vault to encrypt my SSH keys, which is why the --ask-vault-pass option is required. Ansible Vault uses AES-256-CBC for encryption

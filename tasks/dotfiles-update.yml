@@ -1,0 +1,28 @@
+# Update dotfiles on existing machines
+- name: Check if .dotfiles directory exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.dotfiles"
+  register: dotfiles_dir
+  tags:
+    - dotfiles-update
+
+- name: Pull latest dotfiles changes
+  git:
+    repo: 'git@github.com:zjromani/.dotfiles.git'
+    dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
+    version: master
+    update: yes
+  when: dotfiles_dir.stat.exists
+  tags:
+    - dotfiles-update
+
+- name: Re-stow all dotfiles packages
+  shell: |
+    cd {{ lookup('env', 'HOME') }}/.dotfiles
+    for folder in bin tmux zsh git nvim psql vim claude; do
+      if [ -d "$folder" ]; then
+        stow -R "$folder"
+      fi
+    done
+  tags:
+    - dotfiles-update
