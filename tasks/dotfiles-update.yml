@@ -16,13 +16,18 @@
   tags:
     - dotfiles-update
 
+- name: Read stow packages from dotfiles manifest
+  include_vars:
+    file: "{{ lookup('env', 'HOME') }}/.dotfiles/packages.yml"
+  when: dotfiles_dir.stat.exists
+  tags:
+    - dotfiles-update
+
 - name: Re-stow all dotfiles packages
-  shell: |
-    cd {{ lookup('env', 'HOME') }}/.dotfiles
-    for folder in bin tmux zsh git nvim psql vim claude; do
-      if [ -d "$folder" ]; then
-        stow -R "$folder"
-      fi
-    done
+  shell: stow -R "{{ item }}"
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
+  loop: "{{ stow_packages }}"
+  when: dotfiles_dir.stat.exists
   tags:
     - dotfiles-update
