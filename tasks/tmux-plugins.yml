@@ -8,6 +8,17 @@
     - tmux
     - plugins
 
+- name: Install JetBrainsMono Nerd Font (macOS)
+  homebrew_cask:
+    name: font-jetbrains-mono-nerd-font
+    state: present
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - tmux
+    - plugins
+    - fonts
+
 - name: Install tmux catppuccin theme
   git:
     repo: 'https://github.com/catppuccin/tmux.git'
