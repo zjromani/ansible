@@ -1,0 +1,32 @@
+# Configure iTerm2 to load preferences from dotfiles
+- name: Configure iTerm2 to use custom preferences folder
+  community.general.osx_defaults:
+    domain: com.iterm2
+    key: PrefsCustomFolder
+    type: string
+    value: "{{ lookup('env', 'HOME') }}/.config/iterm2"
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - iterm2
+    - terminal
+
+- name: Enable loading preferences from custom folder
+  community.general.osx_defaults:
+    domain: com.iterm2
+    key: LoadPrefsFromCustomFolder
+    type: bool
+    value: true
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - iterm2
+    - terminal
+
+- name: Stow iTerm2 configuration
+  shell: stow -R iterm2
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - iterm2
+    - dotfiles
+    - terminal
