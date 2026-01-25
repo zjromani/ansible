@@ -39,8 +39,11 @@ ansible-playbook update.yml --tags tmux
 
 This will:
 - Pull latest .dotfiles from GitHub
-- Re-stow all packages
+- Re-stow all packages (reads from dotfiles/packages.yml)
 - Update tmux plugins (catppuccin)
+- Sync iTerm2 configuration
+
+The dotfiles update task reads the package list from `~/.dotfiles/packages.yml`, ensuring it stays in sync with the dotfiles repo.
 
 ### Full Setup vs Update
 
