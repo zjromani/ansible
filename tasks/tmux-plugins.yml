@@ -19,12 +19,30 @@
     - plugins
     - fonts
 
+- name: Check if catppuccin is a valid git repo
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.config/tmux/plugins/catppuccin/.git"
+  register: catppuccin_git
+  tags:
+    - tmux
+    - plugins
+
+- name: Remove invalid catppuccin directory structure
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config/tmux/plugins/catppuccin"
+    state: absent
+  when: not catppuccin_git.stat.exists
+  tags:
+    - tmux
+    - plugins
+
 - name: Install tmux catppuccin theme
   git:
     repo: 'https://github.com/catppuccin/tmux.git'
     dest: "{{ lookup('env', 'HOME') }}/.config/tmux/plugins/catppuccin"
     version: main
     update: yes
+    force: yes
   tags:
     - tmux
     - plugins
