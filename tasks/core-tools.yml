@@ -40,6 +40,7 @@
       - zsh
       - ripgrep
       - tmux
+      - tree
       - awscli
       - fzf
       - jq
