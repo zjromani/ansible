@@ -26,6 +26,7 @@
       - awscli
       - jq
       - fzf
+      - starship
     state: present
   tags:
     - core
@@ -44,6 +45,7 @@
       - awscli
       - fzf
       - jq
+      - starship
       - cleanshot
       - anthropics/claude/claude
     state: present

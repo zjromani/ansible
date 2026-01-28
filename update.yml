@@ -8,9 +8,29 @@
       include_tasks: tasks/dotfiles-update.yml
       tags: dotfiles
 
+    - name: Ensure Starship is installed (macOS)
+      homebrew:
+        name: starship
+        state: present
+      become: false
+      when: ansible_facts['system'] == 'Darwin'
+      tags: zsh
+
+    - name: Ensure Starship is installed (Linux)
+      become: true
+      apt:
+        name: starship
+        state: present
+      when: ansible_facts['system'] != 'Darwin'
+      tags: zsh
+
     - name: Update tmux plugins
       include_tasks: tasks/tmux-plugins.yml
       tags: tmux
+
+    - name: Sync Neovim plugins (PackerSync)
+      shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+      tags: nvim
 
     - name: Sync iTerm2 configuration
       include_tasks: tasks/iterm2.yml
