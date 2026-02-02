@@ -28,6 +28,8 @@
   args:
     chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
   loop: "{{ stow_packages }}"
-  when: dotfiles_dir.stat.exists
+  when:
+    - dotfiles_dir.stat.exists
+    - item != 'iterm2'
   tags:
     - dotfiles-update

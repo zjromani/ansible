@@ -21,12 +21,31 @@
     - iterm2
     - terminal
 
+- name: Remove existing AppSupport symlink before stowing
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config/iterm2/AppSupport"
+    state: absent
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - iterm2
+    - terminal
+
 - name: Stow iTerm2 configuration
-  shell: stow -R iterm2
+  shell: stow -R --ignore='AppSupport' iterm2
   args:
     chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
   when: ansible_facts['system'] == 'Darwin'
   tags:
     - iterm2
     - dotfiles
+    - terminal
+
+- name: Create symlink to iTerm2 Application Support
+  file:
+    src: "{{ lookup('env', 'HOME') }}/Library/Application Support/iTerm2"
+    dest: "{{ lookup('env', 'HOME') }}/.config/iterm2/AppSupport"
+    state: link
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - iterm2
     - terminal
