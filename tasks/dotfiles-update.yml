@@ -33,3 +33,11 @@
     - item != 'iterm2'
   tags:
     - dotfiles-update
+
+- name: Sync Cursor skill symlinks
+  shell: ~/.dotfiles/bin/scripts/sync-cursor-skills
+  args:
+    executable: /bin/zsh
+  when: dotfiles_dir.stat.exists
+  tags:
+    - dotfiles-update

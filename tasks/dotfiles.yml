@@ -75,6 +75,13 @@
     - dotfiles
     - tmux-plugins
 
+- name: Sync Cursor skill symlinks
+  shell: ~/.dotfiles/bin/scripts/sync-cursor-skills
+  args:
+    executable: /bin/zsh
+  tags:
+    - dotfiles
+
 - name: Notify user to restart shell
   debug:
     msg: "Dotfiles installed. Please run 'exec $SHELL' or restart your terminal session."
