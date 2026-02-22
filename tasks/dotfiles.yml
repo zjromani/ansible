@@ -69,6 +69,12 @@
     - dotfiles
     - install
 
+- name: Sync Cursor skill symlinks
+  command: "{{ ansible_env.HOME }}/.dotfiles/bin/scripts/sync-cursor-skills"
+  changed_when: false
+  tags:
+    - dotfiles
+
 - name: Install tmux plugins
   include_tasks: tmux-plugins.yml
   tags:
