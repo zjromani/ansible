@@ -4,6 +4,13 @@
     user_home: "{{ lookup('env', 'HOME') }}"
 
   tasks:
+    - name: Pull latest ansible playbooks
+      command: git pull
+      args:
+        chdir: "{{ lookup('env', 'HOME') }}/me/ansible"
+      ignore_errors: true
+      tags: always
+
     - name: Pull latest dotfiles
       include_tasks: tasks/dotfiles-update.yml
       tags: dotfiles
