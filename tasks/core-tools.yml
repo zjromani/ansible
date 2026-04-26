@@ -159,6 +159,16 @@
     - install
     - productivity
 
+- name: Thor (app switcher)
+  homebrew_cask:
+    name: thor
+    state: present
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - install
+    - productivity
+
 - name: Install iTerm2 (macOS)
   homebrew_cask:
     name: iterm2
