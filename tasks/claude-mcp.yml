@@ -1,13 +1,13 @@
 # Register user-scoped Claude Code MCP servers
 # Requires ~/.zsh_env_private to have NOTION_API_KEY set
-- name: Check if notion MCP is already registered
-  shell: claude mcp list 2>/dev/null | grep -q '^notion:'
-  register: notion_mcp_check
+- name: Check if user-scoped krisp MCP is already registered
+  shell: claude mcp list 2>/dev/null | grep -q '^krisp:'
+  register: krisp_mcp_check
   failed_when: false
   changed_when: false
   tags: claude-mcp
 
 - name: Register Claude MCP servers via setup script
   shell: bash {{ ansible_env.HOME }}/.claude/setup-mcps.sh
-  when: notion_mcp_check.rc != 0
+  when: krisp_mcp_check.rc != 0
   tags: claude-mcp
