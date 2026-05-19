@@ -42,3 +42,7 @@
     - name: Sync iTerm2 configuration
       include_tasks: tasks/iterm2.yml
       tags: iterm2
+
+    - name: Register Claude MCP servers
+      include_tasks: tasks/claude-mcp.yml
+      tags: claude-mcp

@@ -67,3 +67,7 @@
     - include_tasks: tasks/dotfiles-update.yml
       tags:
         - dotfiles-update
+
+    - include_tasks: tasks/claude-mcp.yml
+      tags:
+        - claude-mcp
