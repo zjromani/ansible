@@ -81,10 +81,6 @@
       tags:
         - flights
 
-    - include_tasks: tasks/snowflake.yml
-      tags:
-        - snowflake
-
     - include_tasks: tasks/claude-mcp.yml
       tags:
         - claude-mcp
