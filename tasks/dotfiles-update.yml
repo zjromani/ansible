@@ -44,7 +44,7 @@
     - dotfiles-update
 
 - name: Sync Cursor skill symlinks
-  command: "{{ ansible_env.HOME }}/.dotfiles/bin/scripts/sync-cursor-skills"
+  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/sync-cursor-skills"
   when: dotfiles_dir.stat.exists
   changed_when: false
   tags:

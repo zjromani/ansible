@@ -22,18 +22,18 @@
 
 - name: Check if Oh My Zsh is installed
   stat:
-    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    path: "{{ lookup('env', 'HOME') }}/.oh-my-zsh"
   register: oh_my_zsh
 
 - name: Install Oh My Zsh
   shell: |
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   args:
-    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    creates: "{{ lookup('env', 'HOME') }}/.oh-my-zsh"
   when: not oh_my_zsh.stat.exists
 
 - name: Install zsh-autosuggestions plugin
   git:
     repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
-    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
     update: no

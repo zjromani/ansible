@@ -1,24 +1,24 @@
 - name: Ensure ~/flights directory exists
   file:
-    path: "{{ ansible_env.HOME }}/flights"
+    path: "{{ lookup('env', 'HOME') }}/flights"
     state: directory
     mode: '0755'
   tags: flights
 
 - name: Clone flights-ai-workspace (team skills)
-  shell: gh repo clone HotelEngine/flights-ai-workspace {{ ansible_env.HOME }}/flights/flights-ai-workspace
+  shell: gh repo clone HotelEngine/flights-ai-workspace {{ lookup('env', 'HOME') }}/flights/flights-ai-workspace
   args:
-    creates: "{{ ansible_env.HOME }}/flights/flights-ai-workspace"
+    creates: "{{ lookup('env', 'HOME') }}/flights/flights-ai-workspace"
   tags: flights
 
 - name: Clone zach-ai-workspace (personal skills)
-  shell: gh repo clone HotelEngine/zach-ai-workspace {{ ansible_env.HOME }}/flights/zach-ai-workspace
+  shell: gh repo clone HotelEngine/zach-ai-workspace {{ lookup('env', 'HOME') }}/flights/zach-ai-workspace
   args:
-    creates: "{{ ansible_env.HOME }}/flights/zach-ai-workspace"
+    creates: "{{ lookup('env', 'HOME') }}/flights/zach-ai-workspace"
   tags: flights
 
 - name: Run flights workspace setup (wires ~/flights/.claude/)
-  shell: bash {{ ansible_env.HOME }}/flights/zach-ai-workspace/setup.sh
+  shell: bash {{ lookup('env', 'HOME') }}/flights/zach-ai-workspace/setup.sh
   args:
     executable: /bin/bash
   tags: flights
