@@ -45,6 +45,7 @@
     src: "{{ lookup('env', 'HOME') }}/Library/Application Support/iTerm2"
     dest: "{{ lookup('env', 'HOME') }}/.config/iterm2/AppSupport"
     state: link
+    force: yes
   when: ansible_facts['system'] == 'Darwin'
   tags:
     - iterm2
