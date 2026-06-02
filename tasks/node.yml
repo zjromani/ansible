@@ -26,11 +26,12 @@
         - node
         - setup
 
-    - name: Install Node.js v20.3.0 using NVM
+    - name: Install Node.js LTS using NVM
       shell: |
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 20.3.0
+        nvm install --lts
+        nvm use --lts
       args:
         executable: /bin/zsh
       tags:
