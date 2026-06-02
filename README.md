@@ -61,10 +61,36 @@ Two things are vault-encrypted in this repo:
 - `.ssh/id_rsa` — SSH private key (AES256)
 - `vars/secrets.yml` — all `~/.zshenv_private` env vars
 
-Both use the same vault password. To edit secrets:
+Both use the same vault password. The vault is the source of truth for secrets — `~/.zshenv_private` on any machine is written from it by the playbook.
+
+### Viewing secrets
 
 ```sh
+ansible-vault view vars/secrets.yml
+```
+
+### Updating a secret (e.g. rotated API token)
+
+```sh
+# 1. Edit the vault file
 ansible-vault edit vars/secrets.yml
+
+# 2. Commit and push
+git add vars/secrets.yml && git commit -m "Updated <token name>" && git push
+
+# 3. Re-deploy to any machine that needs the update
+ansible-playbook local.yml --ask-vault-pass --ask-become-pass --tags secrets,claude-mcp
+```
+
+### Adding a new secret
+
+Same as updating — open `vars/secrets.yml` with `ansible-vault edit`, add the new `export VAR="value"` line inside the `zshenv_private` block, commit, push, re-deploy.
+
+### If a token is stale on a specific machine
+
+```sh
+# Re-write ~/.zshenv_private from vault and re-register MCPs
+ansible-playbook ~/me/ansible/local.yml --ask-vault-pass --ask-become-pass --tags secrets,claude-mcp
 ```
 
 ## SSH
