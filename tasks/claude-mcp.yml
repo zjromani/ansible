@@ -1,13 +1,15 @@
 # Register user-scoped Claude Code MCP servers
-# Requires ~/.zshenv_private to have NOTION_API_KEY set
-- name: Check if user-scoped krisp MCP is already registered
+# Requires ~/.zshenv_private to exist (written by tasks/secrets.yml)
+# Idempotency: checks for datadog-mcp (last secret-dependent MCP) —
+# if absent, full setup runs; if present, everything already registered.
+- name: Check if MCP setup is complete
   shell: |
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    claude mcp list 2>/dev/null | grep -q '^krisp:'
+    claude mcp list 2>/dev/null | grep -q '^datadog-mcp:'
   args:
     executable: /bin/zsh
-  register: krisp_mcp_check
+  register: mcp_complete_check
   failed_when: false
   changed_when: false
   tags: claude-mcp
@@ -19,5 +21,5 @@
     bash {{ ansible_env.HOME }}/.claude/setup-mcps.sh
   args:
     executable: /bin/zsh
-  when: krisp_mcp_check.rc != 0
+  when: mcp_complete_check.rc != 0
   tags: claude-mcp

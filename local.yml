@@ -25,6 +25,10 @@
       tags:
         - config
 
+    - include_tasks: tasks/secrets.yml
+      tags:
+        - secrets
+
     - include_tasks: tasks/ssh.yml
       tags:
         - ssh
@@ -72,6 +76,10 @@
     - include_tasks: tasks/dotfiles-update.yml
       tags:
         - dotfiles-update
+
+    - include_tasks: tasks/flights-workspace.yml
+      tags:
+        - flights
 
     - include_tasks: tasks/claude-mcp.yml
       tags:

@@ -39,6 +39,7 @@
   homebrew:
     name:
       - git
+      - gh
       - zsh
       - ripgrep
       - tmux

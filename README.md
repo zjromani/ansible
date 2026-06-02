@@ -1,66 +1,77 @@
 # Ansible
 
-## Pre Reqs
+Personal machine bootstrap. Handles core tools, dotfiles, Claude Code, MCP servers, and flights workspace in one playbook run.
 
-- Ansible
-- Git
-- Homebrew
+## New Machine Setup
 
-## Setup
-
-This is my setup for Ansible for new machine setup.
-
-Ansible is not already installed, you can install it using the following command:
+**Step 1 — Manual prereqs (~5 min):**
 
 ```sh
-git clone https://github.com/zjromani/ansible
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install git ansible
+# Clone via HTTPS — intentional, SSH not set up yet (playbook installs it)
+git clone https://github.com/zjromani/ansible ~/me/ansible
 ```
-Then run
+
+**Step 2 — Run playbook:**
 
 ```sh
-// ask-become-pass is for sudo password
+cd ~/me/ansible
 ansible-playbook local.yml --ask-vault-pass --ask-become-pass
 ```
 
-This will setup a new machine by pulling .dotfiles, stowing them, and auto installing some other core packages/tools.
+- **BECOME password** = macOS login password (used for sudo)
+- **Vault password** = Ansible vault password (decrypts SSH key + secrets)
+
+The playbook installs: SSH keys, core brew tools (`gh`, `git`, `tmux`, `fzf`, etc.), Claude Code CLI, neovim, Node via NVM, zsh + Oh My Zsh, dotfiles (stowed), tmux plugins, iTerm2 preferences, `~/.zshenv_private` from vault, and user-scoped MCP servers.
+
+**Step 3 — After playbook: manual OAuth steps:**
+
+```sh
+gh auth login   # required before flights workspace task can clone private repos
+
+# Re-auth claude.ai OAuth MCPs (Slack, Linear, Gmail, Figma, etc.)
+# → claude.ai/settings → Integrations
+```
+
+**Step 4 — Re-run to pick up flights workspace + MCPs:**
+
+```sh
+ansible-playbook local.yml --ask-vault-pass --ask-become-pass --tags flights,claude-mcp
+```
 
 ## Updating Existing Machines
 
-For machines with dotfiles already installed, use the update playbook:
+```sh
+cd ~/me/ansible
+ansible-playbook update.yml
+```
+
+Or update specific components:
 
 ```sh
-# Quick update - pulls latest dotfiles and re-stows
-ansible-playbook update.yml
-
-# Update specific components
 ansible-playbook update.yml --tags dotfiles
 ansible-playbook update.yml --tags tmux
 ```
 
-This will:
-- Pull latest .dotfiles from GitHub
-- Re-stow all packages (reads from dotfiles/packages.yml)
-- Update tmux plugins (catppuccin)
-- Sync iTerm2 configuration
+## Vault
 
-The dotfiles update task reads the package list from `~/.dotfiles/packages.yml`, ensuring it stays in sync with the dotfiles repo.
+Two things are vault-encrypted in this repo:
 
-### Full Setup vs Update
+- `.ssh/id_rsa` — SSH private key (AES256)
+- `vars/secrets.yml` — all `~/.zshenv_private` env vars
 
-- **New machine**: `ansible-playbook local.yml --ask-vault-pass --ask-become-pass`
-- **Existing machine**: `ansible-playbook update.yml`
+Both use the same vault password. To edit secrets:
+
+```sh
+ansible-vault edit vars/secrets.yml
+```
 
 ## SSH
 
-A note on SSH -- I'm using Ansible Vault to encrypt my SSH keys, which is why the --ask-vault-pass option is required. Ansible Vault uses AES-256-CBC for encryption
+SSH key is stored vault-encrypted in `.ssh/id_rsa`. The playbook decrypts and installs it to `~/.ssh/id_rsa`, then uses it to clone dotfiles via SSH. This is why the vault password is required even on a fresh machine.
 
-## iTerm2 Profile Setup
+## iTerm2
 
-Iterm sync requires some manual effort. I save an instance of my settings in iCloud, which allows me to sync my iTerm2 profile across devices. Here’s how to set it up:
-
-1. Open iTerm2 → Preferences (`⌘ + ,`)
-2. Go to the **General** tab → **Preferences**
-3. Enable **"Load preferences from a custom folder"**
-4. Set the path to the "iterm-profile.json"
-5. Restart iTerm2
+iTerm2 preferences are synced via dotfiles (stowed from `~/.dotfiles/iterm2/`). The AppSupport symlink is created by the playbook — no manual import needed. iTerm2 will load preferences from `~/.config/iterm2/` automatically on first launch.
 
