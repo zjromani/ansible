@@ -34,6 +34,16 @@
   become: true
   when: ansible_facts['system'] != 'Darwin'
 
+- name: Tap anthropics/claude (required for claude CLI)
+  homebrew_tap:
+    name: anthropics/claude
+    state: present
+  become: false
+  when: ansible_facts['system'] == 'Darwin'
+  tags:
+    - core
+    - install
+
 - name: Install Core Development Tools (macOS)
   homebrew:
     name:

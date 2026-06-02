@@ -17,6 +17,7 @@
         update_homebrew: yes
       tags: brew
       become: false
+      ignore_errors: yes
       when: ansible_facts['os_family'] == 'Darwin'
 
   tasks:
