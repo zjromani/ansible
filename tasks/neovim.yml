@@ -54,3 +54,12 @@
   tags:
     - nvim
     - packer
+
+- name: Install neovim plugins via PackerSync
+  shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+  args:
+    executable: /bin/zsh
+  ignore_errors: yes
+  tags:
+    - nvim
+    - packer
