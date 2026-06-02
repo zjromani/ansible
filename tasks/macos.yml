@@ -32,3 +32,17 @@
   tags:
     - macos
     - locale
+
+- name: Override time separator to use colon (en_DK uses period by default)
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleICUTimeFormatStrings
+    type: dict
+    value:
+      "1": "HH:mm"
+      "2": "HH:mm:ss"
+      "3": "HH:mm:ss z"
+      "4": "HH:mm:ss zzzz"
+  tags:
+    - macos
+    - locale
