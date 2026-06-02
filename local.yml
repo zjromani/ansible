@@ -49,6 +49,10 @@
       tags:
         - node
 
+    - include_tasks: tasks/claude.yml
+      tags:
+        - claude
+
     - include_tasks: tasks/java.yml
       tags:
         - java

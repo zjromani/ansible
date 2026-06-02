@@ -1,0 +1,10 @@
+- name: Install Claude Code CLI via npm
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    npm install -g @anthropic-ai/claude-code
+  args:
+    executable: /bin/zsh
+  tags:
+    - claude
+    - install
