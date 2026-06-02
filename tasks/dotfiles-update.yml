@@ -12,6 +12,7 @@
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
     version: master
     update: yes
+    force: yes
   when: dotfiles_dir.stat.exists
   tags:
     - dotfiles-update
