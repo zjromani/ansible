@@ -49,6 +49,7 @@
       - jq
       - starship
       - cleanshot
+      - coreutils
     state: present
   tags:
     - core
