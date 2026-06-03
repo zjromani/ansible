@@ -25,7 +25,7 @@
     - dotfiles-update
 
 - name: Re-stow all dotfiles packages
-  shell: stow -R "{{ item }}"
+  shell: stow -R --ignore='.DS_Store' "{{ item }}"
   args:
     chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
   loop: "{{ stow_packages }}"
