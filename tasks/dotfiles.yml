@@ -76,18 +76,19 @@
   tags:
     - dotfiles
 
+- name: Install dotfiles git hooks
+  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/install-hooks"
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
+  changed_when: false
+  tags:
+    - dotfiles
+
 - name: Install tmux plugins
   include_tasks: tmux-plugins.yml
   tags:
     - dotfiles
     - tmux-plugins
-
-- name: Sync Cursor skill symlinks
-  shell: ~/.dotfiles/bin/scripts/sync-cursor-skills
-  args:
-    executable: /bin/zsh
-  tags:
-    - dotfiles
 
 - name: Notify user to restart shell
   debug:

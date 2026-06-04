@@ -36,15 +36,16 @@
     - dotfiles-update
 
 - name: Sync Cursor skill symlinks
-  shell: ~/.dotfiles/bin/scripts/sync-cursor-skills
-  args:
-    executable: /bin/zsh
+  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/sync-cursor-skills"
   when: dotfiles_dir.stat.exists
+  changed_when: false
   tags:
     - dotfiles-update
 
-- name: Sync Cursor skill symlinks
-  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/sync-cursor-skills"
+- name: Install dotfiles git hooks
+  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/install-hooks"
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
   when: dotfiles_dir.stat.exists
   changed_when: false
   tags:
