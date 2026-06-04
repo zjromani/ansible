@@ -50,6 +50,7 @@
       - starship
       - cleanshot
       - coreutils
+      - speedtest-cli
     state: present
   tags:
     - core
