@@ -181,6 +181,22 @@
   tags:
     - terminal
 
+- name: Check if Cursor is installed
+  shell: command -v cursor
+  register: cursor_installed
+  ignore_errors: true
+  changed_when: false
+  tags:
+    - core
+    - install
+
+- name: Install Cursor
+  shell: curl https://cursor.com/install -fsS | bash
+  when: cursor_installed.rc != 0
+  tags:
+    - core
+    - install
+
 - name: Install missing packages (Linux)
   shell: apt-get install -y --fix-missing
   tags:
