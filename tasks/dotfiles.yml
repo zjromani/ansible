@@ -70,12 +70,6 @@
     - dotfiles
     - install
 
-- name: Sync Cursor skill symlinks
-  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/sync-cursor-skills"
-  changed_when: false
-  tags:
-    - dotfiles
-
 - name: Install dotfiles git hooks
   command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/install-hooks"
   args:
@@ -83,6 +77,13 @@
   changed_when: false
   tags:
     - dotfiles
+
+- name: Expand Cursor MCP config
+  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/setup-mcps.sh"
+  changed_when: false
+  tags:
+    - dotfiles
+    - setup-mcps
 
 - name: Install tmux plugins
   include_tasks: tmux-plugins.yml

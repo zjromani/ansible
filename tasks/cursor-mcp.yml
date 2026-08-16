@@ -1,0 +1,9 @@
+# Materialize Cursor ~/.cursor/mcp.json from the stowed template + secrets.
+# Requires ~/.zshenv_private (written by tasks/secrets.yml) for EXEC_CIRCLE_TOKEN.
+- name: Expand Cursor MCP config via setup-mcps
+  shell: bash {{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/setup-mcps.sh
+  args:
+    executable: /bin/zsh
+  tags:
+    - cursor-mcp
+    - setup-mcps

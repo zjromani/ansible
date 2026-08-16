@@ -53,10 +53,6 @@
       tags:
         - node
 
-    - include_tasks: tasks/claude.yml
-      tags:
-        - claude
-
     - include_tasks: tasks/java.yml
       tags:
         - java
@@ -81,6 +77,7 @@
       tags:
         - flights
 
-    - include_tasks: tasks/claude-mcp.yml
+    - include_tasks: tasks/cursor-mcp.yml
       tags:
-        - claude-mcp
+        - cursor-mcp
+        - setup-mcps

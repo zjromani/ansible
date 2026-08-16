@@ -23,21 +23,21 @@ ansible-playbook local.yml --ask-vault-pass --ask-become-pass
 - **BECOME password** = macOS login password (used for sudo)
 - **Vault password** = Ansible vault password (decrypts SSH key + secrets)
 
-The playbook installs: SSH keys, core brew tools (`gh`, `git`, `tmux`, `fzf`, etc.), Claude Code CLI, neovim, Node via NVM, zsh + Oh My Zsh, dotfiles (stowed), tmux plugins, iTerm2 preferences, `~/.zshenv_private` from vault, and user-scoped MCP servers.
+The playbook installs: SSH keys, core brew tools (`gh`, `git`, `tmux`, `fzf`, etc.), neovim, Node via NVM, zsh + Oh My Zsh, dotfiles (stowed, including portable `agents/` skills), tmux plugins, iTerm2 preferences, `~/.zshenv_private` from vault, and Cursor MCP via `bin/scripts/setup-mcps.sh`.
 
 **Step 3 — After playbook: manual OAuth steps:**
 
 ```sh
 gh auth login   # required before flights workspace task can clone private repos
 
-# Re-auth claude.ai OAuth MCPs (Slack, Linear, Gmail, Figma, etc.)
-# → claude.ai/settings → Integrations
+# Re-auth Cursor OAuth MCPs (Krisp, Readwise, AllTrails, etc.)
+# → cursor-agent mcp login <name>
 ```
 
 **Step 4 — Re-run to pick up flights workspace + MCPs:**
 
 ```sh
-ansible-playbook local.yml --ask-vault-pass --ask-become-pass --tags flights,claude-mcp
+ansible-playbook local.yml --ask-vault-pass --ask-become-pass --tags flights,cursor-mcp
 ```
 
 ## Updating Existing Machines
@@ -79,7 +79,7 @@ ansible-vault edit vars/secrets.yml
 git add vars/secrets.yml && git commit -m "Updated <token name>" && git push
 
 # 3. Re-deploy to any machine that needs the update
-ansible-playbook local.yml --ask-vault-pass --ask-become-pass --tags secrets,claude-mcp
+ansible-playbook local.yml --ask-vault-pass --ask-become-pass --tags secrets,cursor-mcp
 ```
 
 ### Adding a new secret
@@ -90,7 +90,7 @@ Same as updating — open `vars/secrets.yml` with `ansible-vault edit`, add the 
 
 ```sh
 # Re-write ~/.zshenv_private from vault and re-register MCPs
-ansible-playbook ~/me/ansible/local.yml --ask-vault-pass --ask-become-pass --tags secrets,claude-mcp
+ansible-playbook ~/me/ansible/local.yml --ask-vault-pass --ask-become-pass --tags secrets,cursor-mcp
 ```
 
 ## SSH

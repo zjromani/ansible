@@ -56,6 +56,8 @@
       include_tasks: tasks/iterm2.yml
       tags: iterm2
 
-    - name: Register Claude MCP servers
-      include_tasks: tasks/claude-mcp.yml
-      tags: claude-mcp
+    - name: Expand Cursor MCP config
+      include_tasks: tasks/cursor-mcp.yml
+      tags:
+        - cursor-mcp
+        - setup-mcps
