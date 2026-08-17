@@ -78,6 +78,8 @@
         - flights
 
     - include_tasks: tasks/cursor-mcp.yml
+      when: enable_cursor_mcp | default(false) | bool
       tags:
         - cursor-mcp
         - setup-mcps
+

@@ -56,8 +56,10 @@
       include_tasks: tasks/iterm2.yml
       tags: iterm2
 
-    - name: Expand Cursor MCP config
+    - name: Expand Cursor MCP config (opt-in)
       include_tasks: tasks/cursor-mcp.yml
+      when: enable_cursor_mcp | default(false) | bool
       tags:
         - cursor-mcp
         - setup-mcps
+

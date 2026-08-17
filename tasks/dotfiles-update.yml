@@ -44,10 +44,3 @@
   tags:
     - dotfiles-update
 
-- name: Expand Cursor MCP config
-  command: "{{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/setup-mcps.sh"
-  when: dotfiles_dir.stat.exists
-  changed_when: false
-  tags:
-    - dotfiles-update
-    - setup-mcps

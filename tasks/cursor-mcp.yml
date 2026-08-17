@@ -1,7 +1,7 @@
-# Materialize Cursor ~/.cursor/mcp.json from the stowed template + secrets.
-# Requires ~/.zshenv_private (written by tasks/secrets.yml) for EXEC_CIRCLE_TOKEN.
+# Opt-in only. Default local.yml / update.yml skip this unless:
+#   -e enable_cursor_mcp=true
 - name: Expand Cursor MCP config via setup-mcps
-  shell: bash {{ lookup('env', 'HOME') }}/.dotfiles/bin/scripts/setup-mcps.sh
+  shell: bash {{ playbook_dir }}/scripts/setup-mcps.sh
   args:
     executable: /bin/zsh
   tags:

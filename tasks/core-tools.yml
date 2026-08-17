@@ -181,18 +181,37 @@
   tags:
     - terminal
 
-- name: Check if Cursor is installed
-  shell: command -v cursor
-  register: cursor_installed
+- name: Ensure ~/.local/bin exists for Cursor Agent CLI
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.local/bin"
+    state: directory
+    mode: "0755"
+  tags:
+    - core
+    - install
+
+- name: Check if Cursor Agent CLI is installed
+  shell: command -v agent || test -x "{{ lookup('env', 'HOME') }}/.local/bin/agent"
+  register: cursor_agent_installed
   ignore_errors: true
   changed_when: false
   tags:
     - core
     - install
 
-- name: Install Cursor
+- name: Install Cursor Agent CLI
   shell: curl https://cursor.com/install -fsS | bash
-  when: cursor_installed.rc != 0
+  when: cursor_agent_installed.rc != 0
+  tags:
+    - core
+    - install
+
+- name: Verify Cursor Agent CLI
+  shell: |
+    export PATH="{{ lookup('env', 'HOME') }}/.local/bin:$PATH"
+    agent --version
+  when: cursor_agent_installed.rc != 0
+  changed_when: false
   tags:
     - core
     - install
