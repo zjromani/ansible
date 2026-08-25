@@ -8,6 +8,10 @@
 # OAuth after setup:
 #   agent mcp login krisp
 #   agent mcp login readwise
+#
+# Stdio MCPs use run-mcp-npx (see ~/.dotfiles/bin/scripts/run-mcp-npx).
+# Do not also enable the Cursor Playwright plugin — it duplicates playwright
+# and launches bare npx, which fails under Cursor's npm_config_prefix.
 
 set -euo pipefail
 
@@ -48,27 +52,15 @@ EOF
     },
     "playwright": {
       "command": "${HOME}/.dotfiles/bin/scripts/run-mcp-npx",
-      "args": ["-y", "@playwright/mcp@latest"],
-      "env": {
-        "NPM_CONFIG_PREFIX": " ",
-        "npm_config_prefix": " "
-      }
+      "args": ["-y", "@playwright/mcp@latest"]
     },
     "airbnb": {
       "command": "${HOME}/.dotfiles/bin/scripts/run-mcp-npx",
-      "args": ["-y", "@openbnb/mcp-server-airbnb", "--ignore-robots-txt"],
-      "env": {
-        "NPM_CONFIG_PREFIX": " ",
-        "npm_config_prefix": " "
-      }
+      "args": ["-y", "@openbnb/mcp-server-airbnb", "--ignore-robots-txt"]
     },
     "vrbo": {
       "command": "${HOME}/.dotfiles/bin/scripts/run-mcp-npx",
-      "args": ["-y", "@striderlabs/mcp-vrbo"],
-      "env": {
-        "NPM_CONFIG_PREFIX": " ",
-        "npm_config_prefix": " "
-      }
+      "args": ["-y", "@striderlabs/mcp-vrbo"]
     },
     "alltrails": {
       "url": "https://www.alltrails.com/mcp"
